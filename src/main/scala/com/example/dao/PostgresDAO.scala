@@ -1,24 +1,29 @@
 package com.example.dao
 
-import com.example.config.AppConfig
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class PostgresDAO(spark: SparkSession) {
-  import spark.implicits._
 
-  private val jdbcUrl = AppConfig.Postgres.url
-  private val connectionProperties = new java.util.Properties()
-  connectionProperties.put("user", AppConfig.Postgres.user)
-  connectionProperties.put("password", AppConfig.Postgres.password)
-  connectionProperties.put("driver", AppConfig.Postgres.driver)
-
-  def readTable(tableName: String): DataFrame = {
-    spark.read.jdbc(jdbcUrl, tableName, connectionProperties)
+  def readTable(jdbcUrl: String, user: String, password: String, tableName: String) = {
+    spark.read
+      .format("jdbc")
+      .option("url", jdbcUrl)
+      .option("dbtable", tableName)
+      .option("user", user)
+      .option("password", password)
+      .option("driver", "org.postgresql.Driver")
+      .load()
   }
 
-  def writeTable(df: DataFrame, tableName: String): Unit = {
+  def writeTable(df: DataFrame, jdbcUrl: String, user: String, password: String, tableName: String): Unit = {
     df.write
+      .format("jdbc")
+      .option("url", jdbcUrl)
+      .option("dbtable", tableName)
+      .option("user", user)
+      .option("password", password)
+      .option("driver", "org.postgresql.Driver")
       .mode("overwrite")
-      .jdbc(jdbcUrl, tableName, connectionProperties)
-  }
+      .save()
+    }
 }

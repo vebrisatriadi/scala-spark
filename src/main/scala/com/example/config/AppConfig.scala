@@ -1,25 +1,29 @@
 package com.example.config
 
-import com.typesafe.config.ConfigFactory
+case class AppConfig(
+  sourceJdbcUrl: String = "",
+  sourceUser: String = "",
+  sourcePassword: String = "",
+  sourceTable: String = "",
+  targetJdbcUrl: String = "",
+  targetUser: String = "",
+  targetPassword: String = "",
+  targetTable: String = ""
+)
 
 object AppConfig {
-  private val config = ConfigFactory.load()
+  def parse(args: Array[String]): Option[AppConfig] = {
+    val parser = new scopt.OptionParser[AppConfig]("SparkPostgresIngestion") {
+      opt[String]("source-jdbc-url").required().action((x, c) => c.copy(sourceJdbcUrl = x))
+      opt[String]("source-user").required().action((x, c) => c.copy(sourceUser = x))
+      opt[String]("source-password").required().action((x, c) => c.copy(sourcePassword = x))
+      opt[String]("source-table").required().action((x, c) => c.copy(sourceTable = x))
+      opt[String]("target-jdbc-url").required().action((x, c) => c.copy(targetJdbcUrl = x))
+      opt[String]("target-user").required().action((x, c) => c.copy(targetUser = x))
+      opt[String]("target-password").required().action((x, c) => c.copy(targetPassword = x))
+      opt[String]("target-table").required().action((x, c) => c.copy(targetTable = x))
+    }
 
-  object Postgres {
-    val url = config.getString("postgres.url")
-    val user = config.getString("postgres.user")
-    val password = config.getString("postgres.password")
-    val driver = config.getString("postgres.driver")
-  }
-
-  object Spark {
-    val appName = config.getString("spark.app-name")
-    val master = config.getString("spark.master")
-  }
-
-  object Ingestion {
-    val sourceTable = config.getString("ingestion.source-table")
-    val targetTable = config.getString("ingestion.target-table")
-    val batchSize = config.getInt("ingestion.batch-size")
+    parser.parse(args, AppConfig())
   }
 }

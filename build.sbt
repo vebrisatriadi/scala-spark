@@ -8,6 +8,12 @@ libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "42.3.1",
   "com.typesafe" % "config" % "1.4.1",
   "org.scalatest" %% "scalatest" % "3.2.9" % Test,
+  "com.github.scopt" %% "scopt" % "4.0.1",
   "org.apache.logging.log4j" % "log4j-core" % "2.14.1",
   "org.apache.logging.log4j" % "log4j-api" % "2.14.1"
 )
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}

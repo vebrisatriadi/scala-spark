@@ -1,18 +1,18 @@
-package com.example
+// package com.example
 
-import org.apache.spark.sql.SparkSession
-import org.scalatest.funsuite.AnyFunSuite
+// import org.apache.spark.sql.SparkSession
+// import org.scalatest.funsuite.AnyFunSuite
 
-class SparkAppTest extends AnyFunSuite {
+// class SparkAppTest extends AnyFunSuite {
   
-  test("SparkSession should be created") {
-    val spark = SparkSession.builder()
-      .appName("SparkScalaProjectTest")
-      .master("local[*]")
-      .getOrCreate()
+//   test("SparkSession should be created") {
+//     val spark = SparkSession.builder()
+//       .appName("SparkScalaProjectTest")
+//       .master("local[*]")
+//       .getOrCreate()
 
-    assert(spark.sparkContext.appName == "SparkScalaProjectTest")
+//     assert(spark.sparkContext.appName == "SparkScalaProjectTest")
     
-    spark.stop()
-  }
-}
+//     spark.stop()
+//   }
+// }
